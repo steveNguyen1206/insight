@@ -1,0 +1,25 @@
+{% extends 'Community/base.html' %}
+
+{% block title %}
+Add community
+{% endblock %}
+
+{% block content %}
+<h1>Add Community</h1>
+<div class="container">
+    <form method="POST">
+        {% csrf_token %}
+        <label>Name</label>
+        <input type="text" id="community-name" name="community-name" class="form-control mb-3">
+
+        <label>Created user</label>
+        <datalist id="community-created-user" name="community-created-user" class="form-control mb-3"> 
+            <option></option>
+        </datalist>
+
+        <label>Description</label>
+        <textarea id="community-description" name="community-description" class="form-control mb-3"> </textarea>
+        <button class="btn btn-primary">Add</button>
+    </form>
+</div>
+{% endblock %}

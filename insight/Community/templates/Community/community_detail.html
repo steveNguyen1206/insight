@@ -1,0 +1,13 @@
+{% extends 'Community/base.html' %}
+
+{% block title %}
+{{ community.name }}
+{% endblock %}
+
+{% block content %}
+<h1>{{community.name}}</h1>
+<h2>Created by {{community.created_user.first_name}} {{community.created_user.last_name}} at {{community.created_date}}</h2>
+<p>{{community.description}}</p>
+
+<a href="{% url 'Community:home' %}">Back</a>
+{% endblock %}

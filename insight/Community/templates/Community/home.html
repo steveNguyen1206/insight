@@ -1,0 +1,15 @@
+{% extends 'Community/base.html' %}
+
+{% block title %}
+Community
+{% endblock %}
+
+{% block content %}
+
+{% for community in communities %}
+    <h2>{{community.name}}</h2>
+    <small>Created at {{community.created_date}} by {{community.created_user.first_name}} {{community.created_user.last_name}} </small>
+    <a href="{% url 'Community:community-detail' community.pk %}">Detail</a>
+{% endfor %}
+
+{% endblock %}
