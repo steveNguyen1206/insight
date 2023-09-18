@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+# from Member.models import User
 from django.urls import reverse
 
 # Create your models here.
@@ -74,3 +75,10 @@ class CommunityFormer:
         self.id = f"{self.community_id}_{self.user_id}"
 
         super().save(*args, **kwargs)
+
+class Exambank:
+    id = models.AutoField(primary_key=True)
+    community_id = models.ForeignKey(Community, on_delete=models.CASCADE)
+    ques_content = models.CharField(max_length=50)
+    answer = models.CharField(max_length=50)
+    purpose = models.CharField(max_length=50)
