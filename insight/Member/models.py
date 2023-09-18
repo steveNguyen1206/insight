@@ -21,7 +21,7 @@ class MyUser(User):
     def save_user(sender, instance, **kwargs):
         instance.myuser.save()
 
-class UserHistory:
+class UserHistory(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     update_date = models.DateField(auto_now_add=True)
@@ -39,10 +39,10 @@ class UserHistory:
         super().save(*args, **kwargs)
 
 
-class UserCommunity:
+class UserCommunity(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(MyUser, on_delete=models.CASCADE)
-    community_id = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    community_id = models.ForeignKey(Community, on_delete=models.CASCADE)
     score = models.IntegerField()
     joined_date = models.DateField(auto_now_add=True)
     def save(self, *args, **kwargs):

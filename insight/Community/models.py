@@ -19,7 +19,7 @@ class Community(models.Model):
     def get_absolute_url(selft):
         return reverse('home')
 
-class CommunityHistory:
+class CommunityHistory(models.Model):
     commu_history_id = models.AutoField(primary_key=True)
     community_id = models.ForeignKey(Community, on_delete=models.CASCADE, null = False)
     updated_date = models.DateField(auto_now_add=True, null=False)
@@ -36,7 +36,7 @@ class CommunityHistory:
 
         super().save(*args, **kwargs)
 
-class CommunityDoc:
+class CommunityDoc(models.Model):
     document_id = models.AutoField(primary_key=True)
     community_id = models.ForeignKey(Community, on_delete=models.CASCADE)
     created_date = models.DateField(auto_now_add=True)
@@ -45,9 +45,9 @@ class CommunityDoc:
     title = models.CharField(max_length=100) 
     path = models.TextField(max_length=255, null=False)
 
-class CommunityCerti:
+class CommunityCerti(models.Model):
     id = models.AutoField(primary_key=True)
-    certificate_type_id = models.AutoField(primary_key=True)
+    certificate_type_id = models.IntegerField()
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     gained_date = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=100) 
@@ -65,7 +65,7 @@ class CommunityCerti:
 
         super().save(*args, **kwargs)
 
-class CommunityFormer:
+class CommunityFormer(models.Model):
     id = models.AutoField(primary_key=True)
     community_id = models.ForeignKey(Community, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -76,7 +76,7 @@ class CommunityFormer:
 
         super().save(*args, **kwargs)
 
-class Exambank:
+class ExamBank(models.Model):
     id = models.AutoField(primary_key=True)
     community_id = models.ForeignKey(Community, on_delete=models.CASCADE)
     ques_content = models.CharField(max_length=50)
