@@ -30,22 +30,26 @@ def signup(request):
     if not request.user.is_authenticated:
 
         if request.method == 'POST':
-            username = request.GET.get('username', None)
-            password = request.GET.get('password', None)
-            password2 = request.GET.get('password2', None)
-            metamarskID = request.GET.get('metamarsk-id')
+            username = request.POST.get('username', None)
+            password = request.POST.get('password', None)
+            password2 = request.POST.get('password2', None)
+            metamarskID = request.POST.get('metamarsk-id')
 
             if password != password2:
                 return render(request, 'Member/signup.html')
             
             new_user = User()
-            print(new_user)
             new_user.username = username
+            print(username, password)
             new_user.set_password(password)
             new_user.date_joined = datetime.now()
             new_user.is_active = True
             new_user.save()
 
+            new_my_user = MyUser()
+            new_my_user.userid = new_user
+            new_my_user.MetamarskID = metamarskID
+            new_my_user.save()
 
             login(request, new_user)
             return redirect('Community:home')
