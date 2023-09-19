@@ -1,0 +1,46 @@
+{% extends 'Community/base.html' %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="avatar">
+        <h3>Avatar</h3>
+    </div>
+    <h1>Username: myname</h1>
+
+    <table class="table table-sm table-bordered table-striped table-hover" style="text-align: center">
+        <thead>
+        <tr style="color:E7FBBE">
+            <th scope="col">#</th>
+            <th scope="col">Community</th>
+            <th scope="col">Score</th>
+            <th scope="col">Rank</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr style="color:E7FBBE">
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>300</td>
+            <td>Silver</td>
+        </tr>
+        <tr style="color:E7FBBE">
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>500</td>
+            <td>Gold</td>
+        </tr>
+        <tr style="color:E7FBBE">
+            <th scope="row">3</th>
+            <td>Larry the Bird</td>
+            <td>100</td>
+            <td>Bronze</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+```

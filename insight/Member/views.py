@@ -59,4 +59,4 @@ def signout(request):
     return redirect('Member:signin')
 
 def profile(request):
-    render(request, 'Member/profile.html')
+    return render(request, 'Member/profile.html')
