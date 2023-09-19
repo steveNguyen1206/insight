@@ -62,5 +62,17 @@ def signout(request):
     logout(request)
     return redirect('Member:signin')
 
-def profile(request):
-    return render(request, 'Member/profile.html')
+def profile(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('Member:signin')
+    else:
+        this_user = User.objects.get(id = pk)
+        # print(this_user)
+        user_communities = UserCommunity.objects.filter(user_id = this_user)
+        print(user_communities)
+        context = {
+            'this_user': this_user,
+            'user_communities': user_communities
+        }
+        return render(request, 'Member/profile.html', context)
+

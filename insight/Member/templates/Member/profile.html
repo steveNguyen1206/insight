@@ -8,7 +8,7 @@
     <div class="avatar">
         <h3>Avatar</h3>
     </div>
-    <h1>Username: myname</h1>
+    <h1>Username: {{this_user.username}}</h1>
 
     <table class="table table-sm table-bordered table-striped table-hover" style="text-align: center">
         <thead>
@@ -20,24 +20,14 @@
         </tr>
         </thead>
         <tbody>
+        {% for user_community in user_communities %}
         <tr style="color:E7FBBE">
-            <th scope="row">1</th>
-            <td>Mark</td>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{user_community.community_id.name}}</td>
             <td>300</td>
-            <td>Silver</td>
+            <td>{{ forloop.counter }}</td>
         </tr>
-        <tr style="color:E7FBBE">
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>500</td>
-            <td>Gold</td>
-        </tr>
-        <tr style="color:E7FBBE">
-            <th scope="row">3</th>
-            <td>Larry the Bird</td>
-            <td>100</td>
-            <td>Bronze</td>
-        </tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>
