@@ -57,3 +57,6 @@ def signup(request):
 def signout(request):
     logout(request)
     return redirect('Member:signin')
+
+def profile(request):
+    render(request, 'Member/profile.html')
