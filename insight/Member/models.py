@@ -11,8 +11,7 @@ class MyUser(models.Model):
     #first Name, last name, password, joined_date đã được kế thừa từ class user
     # user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
     id = models.AutoField(primary_key = True)
-    userid = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='userid')
-    birth_year = models.DateField(auto_now_add=True)
+    userid = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     MetamarskID = models.CharField(max_length=255, blank=False, null=False)
 
 
