@@ -17,3 +17,21 @@
     text-align: center;
     justify-content: center;
 }
+
+.table_with_default_each_column_width {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.block {
+    display: block;
+    width: 100%;
+    border: black;
+    border-radius:0vi;
+    background-color:lightgray;
+    color: white;
+    padding: 14px 28px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+}

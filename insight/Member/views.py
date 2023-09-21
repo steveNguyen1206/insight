@@ -1,3 +1,4 @@
+from itertools import count
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from .models import *
@@ -67,12 +68,17 @@ def profile(request, pk):
         return redirect('Member:signin')
     else:
         this_user = User.objects.get(id = pk)
+        this_user2 = User.objects.get(id = pk)
         # print(this_user)
         user_communities = UserCommunity.objects.filter(user_id = this_user)
+        creater_communities = Community.objects.filter(created_user = this_user)
         print(user_communities)
         context = {
             'this_user': this_user,
-            'user_communities': user_communities
+            'user_communities': user_communities,
+            'creater_communities': creater_communities
         }
+        community_size = creater_communities.count()
+        context['community_size'] = creater_communities.count()
         return render(request, 'Member/profile.html', context)
 

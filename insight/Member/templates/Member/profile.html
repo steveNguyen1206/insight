@@ -3,20 +3,73 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container" class="block">
 
-    <div class="avatar">
+    <!-- <div class="avatar">
         <h3>Avatar</h3>
-    </div>
-    <h1>Username: {{this_user.username}}</h1>
+    </div> -->
+    <div class="container_swap" class="block">
+        <style>
 
-    <table class="table table-sm table-bordered table-striped table-hover" style="text-align: center">
+            .container_swap{
+            
+            width: 400px;
+            
+            }
+            
+            .div_left{
+            
+            width: 400px;
+            
+            float: left;
+            
+            text-align: center;
+            
+            }
+            
+            .div_right{
+            
+            width: 400px;
+            
+            float: center;
+            
+            text-align: center;
+            
+            }
+            
+            </style>
+        <div class="div_left"><img src="https://img.myloview.com/stickers/default-avatar-profile-icon-vector-social-media-user-photo-700-205577532.jpg" class="rounded-3" style="width: 150px;"
+            alt="Avatar" />
+            <p class="text-muted"></p>
+        </div>
+   
+        <div class="div_right" >
+            <p class="text-muted"></p>
+            <p class="text-muted"></p>
+            <p class="text-muted"></p>
+
+            <h5 class="mb-2" style="display: flexbox;"><strong>{{this_user.username}}</strong></h5>
+            <p class="text-muted">Basic member <span class="badge bg-primary">PRO</span></p>
+            
+        </div>  
+   </div>
+    <div class="block">
+        <h3>Join list</h3>
+        <table class="table table-sm table-bordered table-striped table-hover " style="text-align: center">
+        
         <thead>
-        <tr style="color:E7FBBE">
+            <colgroup>
+                <col width=auto span="1">
+                <col width=auto span="1">
+                <col width="150" span="1">
+                <col width="200" span="1">
+              </colgroup>
+              
+        <tr>
             <th scope="col">#</th>
             <th scope="col">Community</th>
+            <th scope="col">Joined date</th>
             <th scope="col">Score</th>
-            <th scope="col">Rank</th>
         </tr>
         </thead>
         <tbody>
@@ -24,13 +77,42 @@
         <tr style="color:E7FBBE">
             <th scope="row">{{ forloop.counter }}</th>
             <td>{{user_community.community_id.name}}</td>
-            <td>300</td>
-            <td>{{ forloop.counter }}</td>
+            <td>{{user_community.joined_date}}</td>
+            <td>{{user_community.score}}</td>
         </tr>
         {% endfor %}
         </tbody>
-    </table>
-</div>
+    </table></div>
+
+    <div class="block">
+        <h3>Create list</h3>
+        <table class="table table-sm table-bordered table-striped table-hover" style="text-align: center;border-collapse: collapse;" >
+            <thead>
+                <colgroup>
+                    <col width=auto span="1">
+                    <col width=auto span="1">
+                    <col width="150" span="1">
+                    <col width="200" span="1">
+                </colgroup>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Community</th>
+                <th scope="col">Created date</th>
+                <th scope="col">Size</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for creater_communities in creater_communities %}
+            <tr style="color:E7FBBE">
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{creater_communities.name}}</td>
+                <td>{{creater_communities.created_date}}</td>
+                <td>{{community_size}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table></div>
+    </div>
 
 {% endblock %}
 ```

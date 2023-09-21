@@ -1,3 +1,4 @@
+from ast import Num
 from django.db import models
 from django.contrib.auth.models import User
 # from Member.models import User
@@ -11,7 +12,6 @@ class Community(models.Model):
     created_date = models.DateField(auto_now_add=True, blank=True, null=True)
     created_user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=255, blank=True, null=True)
-
     # print(str(abcd))
     def __str__(self):
         return str(self.name) + '-' + str(self.created_user)
