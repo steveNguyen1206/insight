@@ -13,6 +13,7 @@ class MyUser(models.Model):
     id = models.AutoField(primary_key = True)
     userid = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     MetamarskID = models.CharField(max_length=255, blank=False, null=False)
+    
 
 
 class UserHistory(models.Model):

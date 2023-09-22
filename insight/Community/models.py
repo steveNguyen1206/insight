@@ -45,6 +45,7 @@ class CommunityDoc(models.Model):
     title = models.CharField(max_length=100) 
     path = models.TextField(max_length=255, null=False)
 
+
 class CommunityCerti(models.Model):
     id = models.AutoField(primary_key=True)
     certificate_type_id = models.IntegerField()
