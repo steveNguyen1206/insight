@@ -5,11 +5,23 @@ Community
 {% endblock %}
 
 {% block content %}
+<div class="container body-container">
+    <div class="community-container">
 
-{% for community in communities %}
-    <h2>{{community.name}}</h2>
-    <small>Created at {{community.created_date}} by {{community.created_user.first_name}} {{community.created_user.last_name}} </small>
-    <a href="{% url 'Community:community-detail' community.pk %}">Detail</a>
-{% endfor %}
-
+        {% for community in communities %}
+            <div class="card ms-2 me-2 mb-3" style="width: 18rem;">    
+                {% load static %}
+                <img src='{% static "dogs-shiba-inu.jpg" %}' class="card-img-top" alt="{{community.name}}-banner" style="height: 120px; object-fit:cover;">
+                <div class="card-body shadow-sm">
+                    <h5 class="card-title">{{community.name}}</h5>
+                    <small>Created at {{community.created_date}} by <a href="#">{{community.created_user.username}}</a> </small>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="{% url 'Community:community-detail' community.pk %}" class="btn btn-link">
+                        <i class="fa-solid fa-paper-plane me-2"></i>View insight
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
