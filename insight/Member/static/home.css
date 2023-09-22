@@ -23,6 +23,7 @@ section {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    width: 100%;
 }
 
 .shorcut-wrapper {
@@ -42,6 +43,7 @@ section {
 
 .community-card {
     width: 16rem !important;
+    min-width: 14rem !important;
 }
 
 .body-container {
@@ -51,6 +53,8 @@ section {
 
 .community-container {
     display: flex;
+    flex-wrap: wrap;
+
 }
 
 footer {
