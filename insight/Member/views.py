@@ -89,4 +89,23 @@ def profile(request, pk):
         }
         
         return render(request, 'Member/profile.html', context)
+    
+
+def edituser(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('Member:signin')
+    else:
+        user = request.user
+        this_user = User.objects.get(id = pk)
+        if user != this_user:
+            return render(request, 'Member/error.html')
+        else:
+            if request.method == 'POST':
+                pass
+            else:
+                return render(request, 'Member/edit_user.html')
+
+
+        
+        
 

@@ -76,6 +76,16 @@ body {
     -moz-border-radius: 100px;
     border-radius: 100px;
 }
+
+.edit-avatar img {
+    width: 200px;
+    height: 200px;
+    -webkit-border-radius: 400px;
+    -moz-border-radius: 400px;
+    border-radius: 400px;
+}
+
+.user-avatar img
 .account-settings .user-profile h5.user-name {
     margin: 0 0 0.5rem 0;
 }
@@ -96,7 +106,7 @@ body {
 .account-settings .about p {
     font-size: 0.825rem;
 }
-.form-control {
+.form-control, .form-select {
     border: 1px solid #cfd1d8;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -105,6 +115,18 @@ body {
     background: #ffffff;
     color: #2e323c;
 }
+
+
+.edit-wrapper {
+    text-align: center;
+}
+
+.edit-wrapper:hover {
+    cursor: pointer;
+}
+
+/* ------------------- */
+
 
 .card {
     background: #ffffff;
@@ -117,8 +139,19 @@ body {
 
 .table-container {
     background-color: white;
-    margin: 20px 0;
     padding: 40px 20px;
     border: none;
     /* border-radius: 14px; */
+}
+
+
+/* edit profile------------ */
+.profile-container {
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    padding: 40px 25px;
+    border-radius: 6px;
 }
