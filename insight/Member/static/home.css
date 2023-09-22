@@ -6,7 +6,13 @@ body {
 }
 
 section {
-    margin-bottom: 120px;
+    margin-bottom: 60px;
+    padding: 60px 25px;
+    background: #ffffff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
 }
 
 .active {
@@ -34,12 +40,12 @@ section {
     overflow: hidden;
 }
 
-.card {
+.community-card {
     width: 16rem !important;
 }
 
 .body-container {
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
     padding: 40px 20px;
 }
 
