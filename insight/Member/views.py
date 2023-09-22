@@ -1,3 +1,4 @@
+from itertools import count
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from .models import *
@@ -62,5 +63,49 @@ def signout(request):
     logout(request)
     return redirect('Member:signin')
 
-def profile(request):
-    render(request, 'Member/profile.html')
+def profile(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('Member:signin')
+    else:
+        this_user = User.objects.get(id = pk)
+        this_user2 = User.objects.get(id = pk)
+        # print(this_user)
+        user_communities = UserCommunity.objects.filter(user_id = this_user)
+        creater_communities = Community.objects.filter(created_user = this_user)
+        len = []
+        for i in creater_communities:
+            len.append(
+                { 
+                    "community": i,
+                    "len": UserCommunity.objects.filter(community_id = i).count()	
+                }
+            )
+        print(len)
+        context = {
+            'this_user': this_user,
+            'user_communities': user_communities,
+            'creater_communities': creater_communities,
+            "len": len
+        }
+        
+        return render(request, 'Member/profile.html', context)
+    
+
+def edituser(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('Member:signin')
+    else:
+        user = request.user
+        this_user = User.objects.get(id = pk)
+        if user != this_user:
+            return render(request, 'Member/error.html')
+        else:
+            if request.method == 'POST':
+                pass
+            else:
+                return render(request, 'Member/edit_user.html')
+
+
+        
+        
+
