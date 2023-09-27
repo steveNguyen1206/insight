@@ -64,7 +64,7 @@ def add_community(request):
                 new_community.entrance_test_enable = 1
             
             new_community.save()
-            if (entrance_test_enable == 'on'):
-                return redirect('Community:entrance_test')
+            # if (entrance_test_enable == 'on'):
+                # return redirect('Community:entrance_test') Hưng làm tiếp chỗ này
             return redirect('Community:home')
         return render(request, 'Community/add_community.html')
