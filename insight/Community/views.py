@@ -70,10 +70,21 @@ def add_community(request):
         if(request.method == 'POST'):
             name = request.POST.get('community-name')
             description = request.POST.get('community-description')
+            mentor_thres = request.POST.get('mentor-threshold')
+            upload_permit = request.POST.get('community-upload-permission')
+            entrance_test_enable = request.POST.get('enable-entrance-test')
+
             new_community = Community()
             new_community.name = name
             new_community.description = description
             new_community.created_user = user
+            new_community.mentor_threshold = mentor_thres
+            new_community.upload_permission = upload_permit
+            if(entrance_test_enable == 'on'):
+                new_community.entrance_test_enable = 1
+            
             new_community.save()
+            # if (entrance_test_enable == 'on'):
+                # return redirect('Community:entrance_test') Hưng làm tiếp chỗ này
             return redirect('Community:home')
         return render(request, 'Community/add_community.html')

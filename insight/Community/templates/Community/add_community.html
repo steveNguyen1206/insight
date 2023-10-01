@@ -1,10 +1,18 @@
 {% extends 'Community/base.html' %}
 
+{%load static%}
+
 {% block title %}
 Add community
 {% endblock %}
 
+{%block link%}
+<link rel="stylesheet" href='{% static "add_community.css" %}'>
+{%endblock%}
+
 {% block content %}
+
+<script src='{% static "add_community.js" %}' ></script>
 <h1>Add Community</h1>
 <div class="container">
     <form method="POST">
@@ -19,7 +27,36 @@ Add community
 
         <label>Description</label>
         <textarea id="community-description" name="community-description" class="form-control mb-3"> </textarea>
-        <button class="btn btn-primary">Add</button>
+        
+
+        <label>Score to be mentor</label>
+        <input id="mentor-threshold" name="mentor-threshold" class="form-control mb-3" type="number""> </textarea>
+
+        
+        <label>Document upload permission</label>
+        <select class="form-select" aria-label="Default select example" name="community-upload-permission" style="margin-bottom: 15px;">
+            <option selected value="1">Freely</option>
+            <option value="2">Only Mentor</option>
+            <option value="3">Restricted</option>
+        </select>
+        <div class="container text-center" style="margin-bottom: 15px;">
+            <div class="row" style="margin-left: 0%; justify-content: center; align-items: center;">
+                <div class="form-check form-switch col-5">
+                    <input class="form-check-input" type="checkbox" role="switch" id="enable_entrance_test-24923" name = "enable-entrance-test">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Enable entrance questions</label>
+                </div>
+                <!-- <div class="input-group col-5" style="width: auto;" id="file_upload_container-24923">
+                    <input type="file" class="form-control" id="file_upload-24923" disabled>
+                </div> -->
+            </div>
+        </div>
+        
+
+        <div style="display: flex; justify-content: center;">
+            <button class="btn btn-primary" id = "add_community_button-24923">Add</button>
+        </div>        
+        
     </form>
 </div>
+
 {% endblock %}
