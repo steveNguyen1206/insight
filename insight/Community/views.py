@@ -42,6 +42,26 @@ class CommunityDetail(DetailView):
     model = Community   
     template_name = 'Community/community_detail.html'
 
+def community_interface(request, pk):
+
+    if not request.user.is_authenticated:
+        return redirect('Member:signin')
+    else:
+        # this_user = User.objects.get(id = pk)
+        # this_user2 = User.objects.get(id = pk)
+        # print(this_user)
+        community=Community.objects.get(id= pk)
+        community_doc= CommunityDoc.objects.filter(community_id = community)
+        print(community)
+        context = {
+            'this_community': community,
+            'community_doc': community_doc,
+
+        }
+        # community_size = creater_communities.count()
+        # context['community_size'] = creater_communities.count()
+        return render(request, 'Community/community_interface.html', context)
+
 def add_community(request):
     if not request.user.is_authenticated:
         return redirect('Member:signin')
