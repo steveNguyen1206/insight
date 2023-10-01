@@ -44,7 +44,7 @@ class CommunityDetail(DetailView):
 
 def add_community(request):
     if not request.user.is_authenticated:
-        return redirect('Member:login')
+        return redirect('Member:signin')
     else:
         user = request.user
         if(request.method == 'POST'):
