@@ -72,13 +72,40 @@ def profile(request, pk):
         # print(this_user)
         user_communities = UserCommunity.objects.filter(user_id = this_user)
         creater_communities = Community.objects.filter(created_user = this_user)
-        print(user_communities)
+        len = []
+        for i in creater_communities:
+            len.append(
+                { 
+                    "community": i,
+                    "len": UserCommunity.objects.filter(community_id = i).count()	
+                }
+            )
+        print(len)
         context = {
             'this_user': this_user,
             'user_communities': user_communities,
-            'creater_communities': creater_communities
+            'creater_communities': creater_communities,
+            "len": len
         }
-        community_size = creater_communities.count()
-        context['community_size'] = creater_communities.count()
+        
         return render(request, 'Member/profile.html', context)
+    
+
+def edituser(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('Member:signin')
+    else:
+        user = request.user
+        this_user = User.objects.get(id = pk)
+        if user != this_user:
+            return render(request, 'Member/error.html')
+        else:
+            if request.method == 'POST':
+                pass
+            else:
+                return render(request, 'Member/edit_user.html')
+
+
+        
+        
 

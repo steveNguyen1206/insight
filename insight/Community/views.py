@@ -12,9 +12,29 @@ def home(request):
         # select * from community
         all_communities = Community.objects.all() 
         flag = False if len(all_communities) == 0 else True
+        shorcuts_mock = [
+            {
+                "name": "Manchester",
+                "path": "muvodic",
+                "logo": "shiba-shorcuts.jpg"
+            },
+
+            {
+                "name": "United",
+                "path": "muvodic",
+                "logo": "shiba-shorcuts.jpg"
+            },
+
+            {
+                "name": "Jack",
+                "path": "muvodic",
+                "logo": "shiba-shorcuts.jpg"
+            }
+        ]
         context = {
             'flag': flag,
-            'communities': all_communities
+            'communities': all_communities,
+            'shorcuts': shorcuts_mock
         }
         return render(request, 'Community/home.html', context)
 
@@ -50,10 +70,21 @@ def add_community(request):
         if(request.method == 'POST'):
             name = request.POST.get('community-name')
             description = request.POST.get('community-description')
+            mentor_thres = request.POST.get('mentor-threshold')
+            upload_permit = request.POST.get('community-upload-permission')
+            entrance_test_enable = request.POST.get('enable-entrance-test')
+
             new_community = Community()
             new_community.name = name
             new_community.description = description
             new_community.created_user = user
+            new_community.mentor_threshold = mentor_thres
+            new_community.upload_permission = upload_permit
+            if(entrance_test_enable == 'on'):
+                new_community.entrance_test_enable = 1
+            
             new_community.save()
+            # if (entrance_test_enable == 'on'):
+                # return redirect('Community:entrance_test') Hưng làm tiếp chỗ này
             return redirect('Community:home')
         return render(request, 'Community/add_community.html')

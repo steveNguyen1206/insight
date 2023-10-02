@@ -3,7 +3,16 @@ from django.db import models
 from django.contrib.auth.models import User
 # from Member.models import User
 from django.urls import reverse
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
+def validate_no_negative(value):
+    if value < 0:
+        raise ValidationError(
+            _('%(value)s is not a positive value'),
+            params={'value': value},
+        )
+    
 # Create your models here.
 class Community(models.Model):
     # khóa đại diện , khóa chính
@@ -12,6 +21,9 @@ class Community(models.Model):
     created_date = models.DateField(auto_now_add=True, blank=True, null=True)
     created_user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=255, blank=True, null=True)
+    upload_permission = models.IntegerField(default=1)
+    mentor_threshold = models.IntegerField(default=0, validators=[validate_no_negative])
+    entrance_test_enable = models.BooleanField(default=0)
     # print(str(abcd))
     def __str__(self):
         return str(self.name) + '-' + str(self.created_user)
@@ -44,6 +56,7 @@ class CommunityDoc(models.Model):
     description = models.CharField(max_length=255, blank=True, null=True)
     title = models.CharField(max_length=100) 
     path = models.TextField(max_length=255, null=False)
+
 
 class CommunityCerti(models.Model):
     id = models.AutoField(primary_key=True)
