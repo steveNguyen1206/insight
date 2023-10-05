@@ -21,7 +21,7 @@ class Community(models.Model):
     created_date = models.DateField(auto_now_add=True, blank=True, null=True)
     created_user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=255, blank=True, null=True)
-    upload_permission = models.IntegerField(default=1)
+    upload_permission = models.IntegerField(default=1, blank=True, null=True)
     mentor_threshold = models.IntegerField(default=0, validators=[validate_no_negative])
     entrance_test_enable = models.BooleanField(default=0)
     # print(str(abcd))

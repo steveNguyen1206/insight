@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'insight.wsgi.application'
 DATABASES = {
     'default': {        
         'ENGINE': 'django.db.backends.mysql',        
-        'NAME': 'insight_database',
+        'NAME': 'insight_database2',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
@@ -126,9 +126,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
