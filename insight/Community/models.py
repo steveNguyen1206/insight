@@ -24,6 +24,7 @@ class Community(models.Model):
     upload_permission = models.IntegerField(default=1)
     mentor_threshold = models.IntegerField(default=0, validators=[validate_no_negative])
     entrance_test_enable = models.BooleanField(default=0)
+    Member = models.ManyToManyField(User,related_name='groups_joined',through='CommunityMember')
     # print(str(abcd))
     def __str__(self):
         return str(self.name) + '-' + str(self.created_user)
@@ -86,6 +87,22 @@ class CommunityFormer(models.Model):
     def save(self, *args, **kwargs):
         # Concatenate community_id and formatted created_date to generate commu_history_id
         self.id = f"{self.community_id}_{self.user_id}"
+
+        super().save(*args, **kwargs)
+class CommunityMember(models.Model):
+    
+    community= models.ForeignKey(Community, on_delete=models.CASCADE)
+    member= models.ForeignKey(User, on_delete=models.CASCADE)
+    date_joined = models.DateField(auto_now_add=True)
+    is_mentor = models.BooleanField(default=False)
+    point= models.IntegerField(default=0)
+    def save(self, *args, **kwargs):
+    # Get the day, month, and year from the created_date
+        day = str(self.date_joined.day).zfill(2)
+        month = str(self.date_joined.month).zfill(2)
+        year = str(self.date_joined.year % 100).zfill(2)
+
+        # self.id = f"{self.community}-{self.member}-{day}{month}{year}"
 
         super().save(*args, **kwargs)
 

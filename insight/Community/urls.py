@@ -6,5 +6,6 @@ urlpatterns = [
     path('home', home, name="home"),
     path('community/<int:pk>', CommunityDetail.as_view(), name='community-detail'),
     path('community-interface/<int:pk>', community_interface, name='community-interface'),
-    path('add-community', add_community, name='add-community')
+    path('add-community', add_community, name='add-community'),
+    path('join-community/<int:pk>', join_community, name='join-community')
 ]

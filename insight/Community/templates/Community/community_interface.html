@@ -48,24 +48,23 @@
                 </colgroup>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Community</th>
-                <th scope="col">Created date</th>
-                <th scope="col">Size</th>
+                <th scope="col">ID</th>
+                <th scope="col">Joined</th>
+                <th scope="col">Score</th>
             </tr>
             </thead>
             <tbody>
-            {% for creater_communities in creater_communities %}
+            {% for member in community_members %}
             <tr style="color:E7FBBE">
                 <th scope="row">{{ forloop.counter }}</th>
-                <td>{{creater_communities.name}}</td>
-                <td>{{creater_communities.created_date}}</td>
-                <td>{{community_size}}</td>
+                <td>{{member.member_id}}</td>
+                <td>{{member.date_joined}}</td>
+                <td>{{member.point}}</td>
             </tr>
             {% endfor %}
             </tbody>
         </table></div>
     </div>
-
 
 
 
