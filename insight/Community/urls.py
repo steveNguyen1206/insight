@@ -4,7 +4,8 @@ from .views import *
 urlpatterns = [
     path('', home, name="home"),
     path('home', home, name="home"),
-    path('community/<int:pk>', CommunityDetail.as_view(), name='community-detail'),
+    path('community/<int:pk>', community_detail, name='community-detail'),
     path('community-interface/<int:pk>', community_interface, name='community-interface'),
-    path('add-community', add_community, name='add-community')
+    path('add-community', add_community, name='add-community'),
+    path('request-mentor', request_mentor, name=request_mentor)
 ]

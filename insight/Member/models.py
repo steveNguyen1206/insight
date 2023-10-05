@@ -39,6 +39,7 @@ class UserCommunity(models.Model):
     community_id = models.ForeignKey(Community, on_delete=models.CASCADE)
     score = models.IntegerField()
     joined_date = models.DateField(auto_now_add=True)
+    is_mentor = models.BooleanField(default=False, null=False, blank=True)
 
     # def save(self, *args, **kwargs):
     #     # Get the day, month, and year from the created_date
@@ -46,7 +47,19 @@ class UserCommunity(models.Model):
     #     month = str(self.joined_date.month).zfill(2)
     #     year = str(self.joined_date.year % 100).zfill(2)
 
+
+
     #     # Concatenate community_id and formatted created_date to generate commu_history_id
     #     self.id = f"{self.user_id}-{self.community_id}-{day}{month}{year}"
 
     #     super().save(*args, **kwargs)
+    #############3# auto uprade is_mentor field#################3
+
+
+
+class RequestMentor(models.Model):
+    id = models.AutoField(primary_key=True)
+    UserCommunityId = models.ForeignKey(UserCommunity, on_delete=models.CASCADE)
+    mentorId =  models.ForeignKey(UserCommunity, on_delete=models.CASCADE)
+    upadate_date = models.DateField(auto_now_add=True)
+    status = models.IntegerField(default= 0, blank=True, null=True) #1 == accepted, 2 == reject, 0 == waiting
