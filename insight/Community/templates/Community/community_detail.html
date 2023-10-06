@@ -6,6 +6,7 @@
 
 <div class="container">
     <div class="block">
+
         <h3>Documents:</h3>
         <table class="table table-sm table-bordered table-striped table-hover " style="text-align: center">
         <thead>
@@ -34,7 +35,9 @@
         {% endfor %}
         </tbody>
         </table>
-        <a href="{% url 'Community:home' %}">Configure this community</a>
+        {% if isFormer %}
+            <a href="{% url 'Community:home' %}">Configure this community</a>
+        {% endif %}
     </div>
 
     <div class="block">

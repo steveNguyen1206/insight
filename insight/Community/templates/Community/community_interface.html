@@ -64,10 +64,14 @@
         {% endfor %}
         </tbody>
         </table>
+        {% if isMember %}
+            <p>You are a member of this group.</p>
+        {% else %}
         <form method="POST" action="{% url 'Community:join-community' pk=community.id %}">
             {% csrf_token %}
             <button type="submit">Join</button>
         </form>
+        {% endif %}
     </div>
 
     <!-- <div class="block">

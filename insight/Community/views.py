@@ -48,32 +48,28 @@ def home(request):
 # 
 # ##########
 
-1. # xác định người dùng có thuộc community hay ko, nếu có thì redirect qua trang interface
-
-#anh việt
 def community_interface(request, pk):
     if not request.user.is_authenticated:
         return redirect('Member:signin')
     else:
         community = Community.objects.get(id = pk)
         user = request.user
+        isMember = UserCommunity.objects.filter(user_id = user, community_id = pk).exists()
         context = {
             "community": community,
-            "user": user
+            "user": user,
+            "isMember": isMember
         }
         return render(request, 'Community/community_interface.html', context)
 
-
-
-#1. xác định người dùng có thuộc community hay ko, nếu ko thì redirect qua trang detail
-#2. xác định người dùng có phải former hay ko
-#3. Truy vấn ra danh sách các người dùng thuộc cộng đồng (có thể làm phân trang - nhưng chưa cần thiết)
-#anh việt
-
 def community_detail(request, pk):
-
+    user=request.user
+    isMember = UserCommunity.objects.filter(user_id = user, community_id = pk).exists()
+    isFormer = Community.objects.filter(created_user_id=user).exists()
     if not request.user.is_authenticated:
         return redirect('Member:signin')
+    elif not isMember:
+        return redirect('Community:community-interface', pk=pk)
     else:
         community=Community.objects.get(id= pk)
         community_doc= CommunityDoc.objects.filter(community_id = community)
@@ -82,6 +78,7 @@ def community_detail(request, pk):
             'community': community,
             'community_doc': community_doc,
             'user_community': user_community,
+            'isFormer': isFormer,
         }
         # community_size = creater_communities.count()
         # context['community_size'] = creater_communities.count()
@@ -166,18 +163,21 @@ def add_community(request):
         return render(request, 'Community/add_community.html')
 
 def join_community(request,pk):
-    if request.user.is_authenticated:
-        user = request.user
-        community = Community.objects.get(id = pk)
-        community.Member.add(user)
-        community.save()
-        user_community = UserCommunity()
-        user_community.user_id=user
-        user_community.community_id=community
-        user_community.joined_date=datetime.now()
-        user_community.score=10
-        user_community.save()
-        context = {
-            'this_community': community,
-        }
-        return redirect('Community:community-detail', pk=pk)
+    community = Community.objects.get(id = pk)
+    user = request.user
+    if commmunity.entrance_test_enable:
+        pass
+    else:
+        if request.user.is_authenticated:
+            community.Member.add(user)
+            community.save()
+            user_community = UserCommunity()
+            user_community.user_id=user
+            user_community.community_id=community
+            user_community.joined_date=datetime.now()
+            user_community.score=10
+            user_community.save()
+            context = {
+                'this_community': community,
+            }
+            return redirect('Community:community-detail', pk=pk)
