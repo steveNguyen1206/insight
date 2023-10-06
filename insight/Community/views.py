@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from .models import *
 from django.views.generic import ListView, DetailView, CreateView
 from .forms import CommunityForm
+from Member.models import RequestMentor, UserCommunity
+
 
 # Create your views here.
 
@@ -110,8 +112,51 @@ def community_mentor(request):
 # trả về json
 # Khang
 def request_mentor(request):
-    demo = {"key": 1}
-    return JsonResponse(demo)
+    if request.method == 'POST':
+        # Retrieve usercommunityID and mentorID from POST data
+        usercommunityID = request.POST.get(...) #tên của trường usercommunityid trong form
+        mentorID = request.POST.get(...) #tên của trường mentorID trong form
+        
+        # Check if a record with the same usercommunityID and mentorID exists
+        existing_request = RequestMentor.objects.filter(
+            UserCommunityId=usercommunityID,
+            mentorId=mentorID
+        ).first()
+        
+        # Initialize flag and status
+        flag = True
+        status = None
+        
+        if existing_request:
+            # If a record exists, set flag to False and retrieve status
+            flag = False
+            status = existing_request.status
+        else:
+            # Check foreign key reference
+            requesting_user = UserCommunity.objects.filter(id=usercommunityID) 
+            requested_mentor = UserCommunity.objects.filter(user_id=mentorID).first()
+            if (requested_mentor != None and requesting_user != None):
+                record = RequestMentor(
+                    UserCommunityId=usercommunityID,
+                    mentorId=mentorID,
+                    status = 0,
+                )
+                record.save()
+
+                
+        
+        # Create a JSON response
+        response_data = {
+            'usercommunityID': usercommunityID,
+            'mentorID': mentorID,
+            'status': status,
+            'flag': flag
+        }
+        
+        return JsonResponse(response_data)
+    else:
+        # Handle other HTTP methods (e.g., GET)
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
 #meta data: usercommunityID,  mentor_id, option
@@ -122,7 +167,50 @@ def request_mentor(request):
 # nếu có rồi thì thay đổi status thành 1/2 phụ thuộc theo option True, False
 # Khang
 def ansewer_request_mentor(request):
-    pass
+    if request.method == "POST":
+        # Retrieve usercommunityID, mentorID, and option from POST data
+        usercommunityID = request.POST.get('...')
+        mentorID = request.POST.get('...')
+        option = request.POST.get('...')
+
+        # Check if a record with the same usercommunityID and mentorID exists
+        existing_request = RequestMentor.objects.filter(
+            UserCommunityId=usercommunityID,
+            mentorId=mentorID
+        ).first()
+
+        # Initialize flag
+        flag = True
+
+        if not existing_request:
+            # If no record exists, set flag to False
+            flag = False
+        else:
+             # Check foreign key reference
+            requesting_user = UserCommunity.objects.filter(id=usercommunityID) 
+            requested_mentor = UserCommunity.objects.filter(user_id=mentorID).first()
+            if (requested_mentor != None and requesting_user != None):
+                # If a record exists, update the status based on the option
+                if option == 1:
+                    existing_request.status = 1  # Accept
+                elif option == 2:
+                    existing_request.status = 2  # Reject
+                else:
+                    return JsonResponse({'error': 'Invalid option'})
+                existing_request.save()
+
+        # Create a JSON response
+        response_data = {
+            'usercommunityID': usercommunityID,
+            'mentorID': mentorID,
+            'status': option,
+            'flag': flag
+        }
+
+        return JsonResponse(response_data)
+    else:
+        # Handle other HTTP methods (e.g., GET)
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
 

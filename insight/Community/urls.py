@@ -7,5 +7,5 @@ urlpatterns = [
     path('community/<int:pk>', community_detail, name='community-detail'),
     path('community-interface/<int:pk>', community_interface, name='community-interface'),
     path('add-community', add_community, name='add-community'),
-    path('request-mentor', request_mentor, name=request_mentor)
+    path('request-mentor', request_mentor, name='request_mentor')
 ]
