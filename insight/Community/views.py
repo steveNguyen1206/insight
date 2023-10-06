@@ -4,6 +4,7 @@ from .models import *
 from django.views.generic import ListView, DetailView, CreateView
 from .forms import CommunityForm
 from datetime import datetime
+from Member.models import UserCommunity
 # Create your views here.
 
 def home(request):
@@ -50,7 +51,7 @@ def home(request):
 1. # xác định người dùng có thuộc community hay ko, nếu có thì redirect qua trang interface
 
 #anh việt
-def community_detail(request, pk):
+def community_interface(request, pk):
     if not request.user.is_authenticated:
         return redirect('Member:signin')
     else:
@@ -60,7 +61,7 @@ def community_detail(request, pk):
             "community": community,
             "user": user
         }
-        return render(request, 'Community/community_detail.html', context)
+        return render(request, 'Community/community_interface.html', context)
 
 
 
@@ -69,22 +70,22 @@ def community_detail(request, pk):
 #3. Truy vấn ra danh sách các người dùng thuộc cộng đồng (có thể làm phân trang - nhưng chưa cần thiết)
 #anh việt
 
-def community_interface(request, pk):
+def community_detail(request, pk):
 
     if not request.user.is_authenticated:
         return redirect('Member:signin')
     else:
         community=Community.objects.get(id= pk)
         community_doc= CommunityDoc.objects.filter(community_id = community)
-        community_members = CommunityMember.objects.filter(community_id = community)
+        user_community = UserCommunity.objects.filter(community_id = community)
         context = {
             'community': community,
             'community_doc': community_doc,
-            'community_members': community_members,
+            'user_community': user_community,
         }
         # community_size = creater_communities.count()
         # context['community_size'] = creater_communities.count()
-        return render(request, 'Community/community_interface.html', context)
+        return render(request, 'Community/community_detail.html', context)
 
 
 #1. xác định người dùng có thuộc community hay ko, nếu ko thì redirect qua trang detail
@@ -170,12 +171,13 @@ def join_community(request,pk):
         community = Community.objects.get(id = pk)
         community.Member.add(user)
         community.save()
-        community_member = CommunityMember()
-        community_member.member=user
-        community_member.community=community
-        community_member.date_joined=datetime.now()
-        community_member.save()
+        user_community = UserCommunity()
+        user_community.user_id=user
+        user_community.community_id=community
+        user_community.joined_date=datetime.now()
+        user_community.score=10
+        user_community.save()
         context = {
             'this_community': community,
         }
-        return redirect('Community:community-interface', pk=pk)
+        return redirect('Community:community-detail', pk=pk)
