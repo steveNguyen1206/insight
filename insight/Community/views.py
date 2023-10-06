@@ -196,6 +196,7 @@ def ansewer_request_mentor(request):
                 elif option == 2:
                     existing_request.status = 2  # Reject
                 else:
+                    flag = False
                     return JsonResponse({'error': 'Invalid option'})
                 existing_request.save()
 
