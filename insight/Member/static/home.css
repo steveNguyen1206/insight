@@ -77,3 +77,14 @@ footer p, footer a {
     overflow: hidden;
     position: relative !important;
 }
+/* boostrap */
+
+.dropdown-menu {
+    width: 100px !important;
+}
+.dropdown-item {
+    width: 100px !important;
+}
+.dropdown-divider {
+    width: 100px !important;
+}

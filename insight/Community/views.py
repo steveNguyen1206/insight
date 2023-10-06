@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from .models import *
 from django.views.generic import ListView, DetailView, CreateView
 from .forms import CommunityForm
@@ -38,9 +39,35 @@ def home(request):
         }
         return render(request, 'Community/home.html', context)
 
-class CommunityDetail(DetailView):
-    model = Community   
-    template_name = 'Community/community_detail.html'
+
+
+#################
+# 
+# với mỗi hàm cần làm thì hoàn thiện lun path trong file url.py
+# 
+# ##########
+
+1. # xác định người dùng có thuộc community hay ko, nếu có thì redirect qua trang interface
+
+#anh việt
+def community_detail(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('Member:signin')
+    else:
+        community = Community.objects.get(id = pk)
+        user = request.user
+        context = {
+            "community": community,
+            "user": user
+        }
+        return render(request, 'Community/community_detail.html', context)
+
+
+
+#1. xác định người dùng có thuộc community hay ko, nếu ko thì redirect qua trang detail
+#2. xác định người dùng có phải former hay ko
+#3. Truy vấn ra danh sách các người dùng thuộc cộng đồng (có thể làm phân trang - nhưng chưa cần thiết)
+#anh việt
 
 def community_interface(request, pk):
 
@@ -51,7 +78,7 @@ def community_interface(request, pk):
         community_doc= CommunityDoc.objects.filter(community_id = community)
         community_members = CommunityMember.objects.filter(community_id = community)
         context = {
-            'this_community': community,
+            'community': community,
             'community_doc': community_doc,
             'community_members': community_members,
         }
@@ -59,9 +86,60 @@ def community_interface(request, pk):
         # context['community_size'] = creater_communities.count()
         return render(request, 'Community/community_interface.html', context)
 
+
+#1. xác định người dùng có thuộc community hay ko, nếu ko thì redirect qua trang detail
+#2. xác định người dùng có phải former hay ko
+#3. truy vấn ra danh sách tất cả các mentor thuộc community 
+#4. render trang communitymentor
+
+#anh việt
+def community_mentor(request):
+    pass
+
+
+# metadata: usercommunityID,  mentor_id
+#vd: request.POST.usercommunityID
+# method: POST
+# trả về json (không render trang html)
+#1. kiểm tra trong bảng request_mentor đã có bản ghi nào trùng usercommunityID và mentor id hay chưa
+# nếu có ròi thì gán cờ là flase, 
+# nếu chưa có thì thêm vào bảng request_mentor một bảng ghi (usercommunityID, mentorID, status = 0), gán gờ là True
+# trả về json
+# Khang
+def request_mentor(request):
+    demo = {"key": 1}
+    return JsonResponse(demo)
+
+
+#meta data: usercommunityID,  mentor_id, option
+# method: POST
+#0. kiểm tra this.usercommunityID có bằng  mentor_id hay ko, ko thì return false
+#1. kiểm tra trong bảng request_mentor đã có bản ghi nào trùng usercommunityID và mentor id hay chưa
+# nếu cưa có thì gán cờ là flase,
+# nếu có rồi thì thay đổi status thành 1/2 phụ thuộc theo option True, False
+# Khang
+def ansewer_request_mentor(request):
+    pass
+
+
+
+# upload document , gọi API của nhóm Hưng
+def upload_document(request):
+    pass
+
+
+
+# get document and return render html
+# Trung - Việt
+def get_community_docments(request):
+    pass
+
+
+
+
 def add_community(request):
     if not request.user.is_authenticated:
-        return redirect('Member:login')
+        return redirect('Member:signin')
     else:
         user = request.user
         if(request.method == 'POST'):

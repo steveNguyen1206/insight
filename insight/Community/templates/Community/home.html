@@ -22,6 +22,13 @@ Community
             {% endfor %}
         </div>
     </section>
+{% for community in communities %}
+    <h2>
+    <a href="{% url 'Community:community-detail' community.pk %}">{{community.name}}</a>
+    </h2>
+    <small>Created at {{community.created_date}} by <a href="{% url 'Member:profile' community.created_user.pk %}"> {{community.created_user.username}}</a> </small>
+    
+{% endfor %}
 
     <section id="community">
         <div class="community-container">
