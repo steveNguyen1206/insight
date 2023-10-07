@@ -6,37 +6,23 @@ from .forms import CommunityForm
 from Member.models import *
 
 # Create your views here.
+def community_interface(request, pk):
+    pass
 
 def home(request):
     if not request.user.is_authenticated:
         return redirect('Member:signin')
     else:
         # select * from community
+        this_user = request.user
         all_communities = Community.objects.all() 
         flag = False if len(all_communities) == 0 else True
-        shorcuts_mock = [
-            {
-                "name": "Manchester",
-                "path": "muvodic",
-                "logo": "shiba-shorcuts.jpg"
-            },
+        joined_community = UserCommunity.objects.filter(user_id = this_user).all()
 
-            {
-                "name": "United",
-                "path": "muvodic",
-                "logo": "shiba-shorcuts.jpg"
-            },
-
-            {
-                "name": "Jack",
-                "path": "muvodic",
-                "logo": "shiba-shorcuts.jpg"
-            }
-        ]
         context = {
             'flag': flag,
             'communities': all_communities,
-            'shorcuts': shorcuts_mock
+            'shorcuts': joined_community
         }
         return render(request, 'Community/home.html', context)
 
@@ -47,54 +33,63 @@ def home(request):
 # với mỗi hàm cần làm thì hoàn thiện lun path trong file url.py
 # 
 # ##########
+def Validate_member(user, community):
+    isMember = UserCommunity.objects.filter(user_id = user, community_id = community).exists()
+    return isMember
 
-1. # xác định người dùng có thuộc community hay ko, nếu có thì redirect qua trang interface
+def Validate_former(user, community):
+    isFormer = Community.objects.filter(created_user_id=user).exists()
+    return isFormer
 
-#anh việt
+
+
+def community_interface(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('Member:signin')
+    
+    this_user=request.user
+    community=Community.objects.get(id= pk)
+    isMember = Validate_member(this_user, community)
+    if not isMember:
+        return redirect('Community:community-detail', pk=pk)
+    else:
+        isFormer = Validate_former(this_user, community)
+        this_community_user = UserCommunity.objects.filter(user_id = this_user, community_id = community)
+        users_community = UserCommunity.objects.filter(community_id = community)
+        users_community = users_community.order_by('-score')
+        print(community)
+        context = {
+            'this_c_user': this_community_user,
+            'community': community,
+            'is_former': isFormer,
+            'users_community': users_community,
+        }
+        # context['community_size'] = creater_communities.count()
+        return render(request, 'Community/community_interface.html', context)
+
+
+
 def community_detail(request, pk):
     if not request.user.is_authenticated:
         return redirect('Member:signin')
     else:
         community = Community.objects.get(id = pk)
         user = request.user
-        context = {
-            "community": community,
-            "user": user
-        }
-        return render(request, 'Community/community_detail.html', context)
-
-
-
-#1. xác định người dùng có thuộc community hay ko, nếu ko thì redirect qua trang detail
-#2. xác định người dùng có phải former hay ko
-#3. Truy vấn ra danh sách các người dùng thuộc cộng đồng (có thể làm phân trang - nhưng chưa cần thiết)
-#anh việt
-
-def community_interface(request, pk):
-
-    if not request.user.is_authenticated:
-        return redirect('Member:signin')
-    else:
-        this_user = User.objects.get(id = pk)
-        # this_user2 = User.objects.get(id = pk)
-        # print(this_user)
-        this_community_user = UserCommunity.objects.get(user_id = this_user.id)
-        community=Community.objects.get(id= pk)
-        community_doc= CommunityDoc.objects.filter(community_id = community)
-        community_users= UserCommunity.objects.filter(community_id = community).order_by('-score')
-        is_former = True
-        print(community)
-        context = {
-            'this_c_user': this_community_user,
-            'community': community,
-            'community_doc': community_doc,
-            'community_users': community_users,
-            'is_former': is_former
-        }
-        # community_size = creater_communities.count()
-        # context['community_size'] = creater_communities.count()
-        return render(request, 'Community/community_interface.html', context)
-
+        isMember = Validate_member(user, community)
+        if isMember == True:
+            return redirect('Community:community-interface', pk=pk)
+        else:
+            community_size = UserCommunity.objects.filter(community_id = pk).count()
+            num_documents = CommunityDoc.objects.filter(community_id = pk).count()
+            num_mentors = UserCommunity.objects.filter(community_id = pk, is_mentor = True).count()
+            context = {
+                "community_size": community_size,
+                "num_documents": num_documents,
+                "num_mentors": num_mentors,
+                "community": community,
+                "user": user,
+            }
+            return render(request, 'Community/community_detail.html', context)
 
 #1. xác định người dùng có thuộc community hay ko, nếu ko thì redirect qua trang detail
 #2. xác định người dùng có phải former hay ko
@@ -105,55 +100,76 @@ def community_mentor(request, pk):
     if not request.user.is_authenticated:
         return redirect('Member:signin')
     else:
-        this_user = User.objects.get(id = pk)
-        this_community_user = UserCommunity.objects.get(user_id = this_user.id)
+        this_user = request.user
         community=Community.objects.get(id= pk)
-        threshold = community.mentor_threshold
-        mentor = UserCommunity.objects.filter(community_id = community, score__gt=threshold)
-        context = {
-            'this_c_user': this_community_user,
-            'community_mentors': mentor,
-            'community': community
-        }
-        return render(request, 'Community/community_mentor.html', context)
+        isMember = Validate_member(this_user, community)
+        if not isMember:
+            return redirect('Community:community-detail', pk=pk)
+        else:
+            this_community_user = UserCommunity.objects.filter(user_id = this_user, community_id = community)
+            isFormer = Validate_former(this_user, community)
+            threshold = community.mentor_threshold
+            mentor = UserCommunity.objects.filter(community_id = community, score__gt=threshold)
+            context = {
+                'this_c_user': this_community_user,
+                'community_mentors': mentor,
+                'community': community,
+                'is_former': isFormer
+            }
+            return render(request, 'Community/community_mentor.html', context)
 
 
 def community_setting(request, pk):
-    if request.method == 'POST':
-        community_name = request.POST['community-name']
-        update_community = Community.objects.get(id = pk)
-        update_community.name = community_name
-    
-        community_description = request.POST['community-description']
-        update_community.description = community_description
-        
-        
-        community_threshold = request.POST['community-threshold']
-        update_community.mentor_threshold = community_threshold
-        
-        community_upload_permission = request.POST['community-upload-permission']
-        update_community.upload_permission = community_upload_permission
-
-        
-        update_community.save()
-        print(update_community)
-        print(update_community.mentor_threshold)
-
-        return JsonResponse(request.POST)
+    if not request.user.is_authenticated:
+        return redirect('Member:signin')
     else:
+        this_user = request.user
         community=Community.objects.get(id= pk)
-        this_user = User.objects.get(id = pk)
-        this_community_user = UserCommunity.objects.get(user_id = this_user.id)
-        print(this_user)
-        test = UserCommunity.objects.filter(community_id = community)
-        is_former = True
-        context = {
-            'this_c_user': this_community_user,
-            'is_former': is_former,
-            'community': community
-        }
-        print(community.upload_permission)
-        return render(request, 'Community/community_setting.html', context)
+        is_former = Validate_former(this_user, community)
+        if not is_former:
+            return redirect('Community:community-detail', pk=pk)
+        else:
+            if request.method == 'POST':
+                community_name = request.POST['community-name']
+                update_community = Community.objects.get(id = pk)
+                update_community.name = community_name
+            
+                community_description = request.POST['community-description']
+                update_community.description = community_description
+                
+                
+                community_threshold = request.POST['community-threshold']
+                update_community.mentor_threshold = community_threshold
+                
+                community_upload_permission = request.POST['community-upload-permission']
+                update_community.upload_permission = community_upload_permission
+
+                if 'enable-entrance-test' in request.POST:
+                    enable_entrance_test = request.POST['enable-entrance-test']
+                    if enable_entrance_test == 'on':
+                        update_community.entrance_test_enable = True 
+                else:
+                    update_community.entrance_test_enable = False
+                    
+                update_community.save()
+                print(update_community)
+                print(update_community.mentor_threshold)
+
+                # return redirect('Community:community-interface', pk=pk)
+                return JsonResponse(request.POST)
+            else:
+                community=Community.objects.get(id= pk)
+                this_user = request.user
+                this_community_user = UserCommunity.objects.filter(user_id = this_user, community_id = community)
+                print(this_user)
+                is_former = True
+                context = {
+                    'this_c_user': this_community_user,
+                    'is_former': is_former,
+                    'community': community
+                }
+                print(community.upload_permission)
+                return render(request, 'Community/community_setting.html', context)
 
 # metadata: usercommunityID,  mentor_id
 #vd: request.POST.usercommunityID
@@ -165,52 +181,68 @@ def community_setting(request, pk):
 # trả về json
 # Khang
 def request_mentor(request):
-    if request.method == 'POST':
+    if not request.user.is_authenticated:
+        return redirect('Member:signin')
+    else:
         # Retrieve usercommunityID and mentorID from POST data
-        usercommunityID = request.POST.get(...) #tên của trường usercommunityid trong form
-        mentorID = request.POST.get(...) #tên của trường mentorID trong form
-        
-        # Check if a record with the same usercommunityID and mentorID exists
-        existing_request = RequestMentor.objects.filter(
-            UserCommunityId=usercommunityID,
-            mentorId=mentorID
-        ).first()
-        
-        # Initialize flag and status
+        usercommunityID = request.GET.get('user_communityID') #tên của trường usercommunityid trong form
+        mentorID = request.GET.get('mentorID') #tên của trường mentorID trong form
+        communityID =  request.GET.get('communityID')
+        community = Community.objects.get(id = communityID)
         flag = True
         status = None
-        
-        if existing_request:
-            # If a record exists, set flag to False and retrieve status
+        err_message = ""
+        if not community:
             flag = False
-            status = existing_request.status
+            err_message = "Community not found"
         else:
-            # Check foreign key reference
-            requesting_user = UserCommunity.objects.filter(id=usercommunityID) 
-            requested_mentor = UserCommunity.objects.filter(user_id=mentorID).first()
-            if (requested_mentor != None and requesting_user != None):
-                record = RequestMentor(
-                    UserCommunityId=usercommunityID,
-                    mentorId=mentorID,
-                    status = 0,
-                )
-                record.save()
+            # Initialize flag and status
 
+
+            # Check foreign key reference
+            requesting_user = UserCommunity.objects.get(id=usercommunityID, community_id = community) 
+            requested_mentor = UserCommunity.objects.get(id=mentorID, community_id=community)
+
+            if requested_mentor == None or requesting_user == None:
+                flag = False
+                err_message = "user or mentor not exist"
+            else:
+                print(requested_mentor)
+                print(requesting_user)
+                # Check if a record with the same usercommunityID and mentorID exists
+                existing_request = RequestMentor.objects.filter(
+                    UserCommunityId=requesting_user,
+                    mentorId=requested_mentor
+                ).exists()
+
+                self_request = requesting_user == requested_mentor
                 
-        
+                if existing_request:
+                    # If a record exists, set flag to False and retrieve status
+                    flag = False
+                    err_message = "request exit"
+                elif self_request:
+                    flag = False
+                    status = existing_request.status
+                    err_message = "can not request yourself"
+                else:
+                    print("tesssstt")
+                    record = RequestMentor(
+                        UserCommunityId=requesting_user,
+                        mentorId=requested_mentor,
+                        status = 0,
+                    )
+                    status = 0
+                    record.save()
+            
         # Create a JSON response
         response_data = {
-            'usercommunityID': usercommunityID,
-            'mentorID': mentorID,
+            'flag': flag,
             'status': status,
-            'flag': flag
+            'err_message': err_message
         }
         
         return JsonResponse(response_data)
-    else:
-        # Handle other HTTP methods (e.g., GET)
-        return JsonResponse({'error': 'Invalid request method'}, status=405)
-
 
 #meta data: usercommunityID,  mentor_id, option
 # method: POST
@@ -276,8 +308,27 @@ def upload_document(request):
 
 # get document and return render html
 # Trung - Việt
-def get_community_docments(request):
-    pass
+def get_community_docments(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('Member:signin')
+    else:
+        this_user = request.user
+        community=Community.objects.get(id= pk)
+        isMember = Validate_member(this_user, community)
+        isFormer = Validate_former(this_user, community)
+        if not isMember:
+            redirect('Community:community-detail', pk=pk)
+        else:
+            community_docs= CommunityDoc.objects.filter(community_id = community)
+            this_community_user = UserCommunity.objects.get(user_id = this_user, community_id = community)
+
+            context = {
+                'community': community,
+                'this_c_user': this_community_user,
+                'community_docs': community_docs,
+                'is_former': isFormer
+            }
+            return render(request, 'Community/community_document.html', context)
 
 
 
@@ -304,7 +355,62 @@ def add_community(request):
                 new_community.entrance_test_enable = 1
             
             new_community.save()
+            new_userCommunity = UserCommunity()
+            new_userCommunity.user_id = user
+            new_userCommunity.community_id = new_community
+            new_userCommunity.is_mentor = False
+            new_userCommunity.save()
             # if (entrance_test_enable == 'on'):
                 # return redirect('Community:entrance_test') Hưng làm tiếp chỗ này
             return redirect('Community:home')
         return render(request, 'Community/add_community.html')
+
+
+def join_community(request, pk, userId=None):
+    community = Community.objects.get(id = pk)
+    # nếu có bật chức năng test thì chuyển qua trang test của nhóm khác
+    if community.entrance_test_enable:
+        return redirect('Community:home')
+    else:
+        user = request.user
+        if request.user.is_authenticated:
+            community.Member.add(user)
+            community.save()
+            user_community = UserCommunity()
+            user_community.user_id=user
+            user_community.community_id=community
+            # user_community.score=10
+            user_community.save()
+            return redirect('Community:community-detail', pk=pk)
+
+def verify_exam(request):
+    communityId = request.POST.get('communityId')
+    userId = request.POST.get('userId')
+    playerScore = request.POST.get('playerScore')
+    community = Community.objects.get(id = communityId)
+    user = User.objects.get(id = userId) 
+    err_mes = ""
+    if user == None or community == None:
+        flag = False
+        err_mes = "user id or commmunity id not valid"
+    else:
+        playScore = int(request.POST.get('playerScore'))
+        print(playScore)
+        if playScore >= 4:
+            community.Member.add(user)
+            community.save()
+            user_community = UserCommunity()
+            user_community.user_id=user
+            user_community.community_id=community
+            user_community.score=10
+            user_community.save()
+            flag = True
+
+        else:
+            flag = False
+            err_mes = "not passed exam"
+    res = {
+        'flag': flag,
+        'err_mess': err_mes
+    }
+    return JsonResponse(res)

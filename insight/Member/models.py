@@ -37,7 +37,7 @@ class UserCommunity(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     community_id = models.ForeignKey(Community, on_delete=models.CASCADE)
-    score = models.IntegerField()
+    score = models.IntegerField(default=10, null=True, blank=True)
     joined_date = models.DateField(auto_now_add=True)
     is_mentor = models.BooleanField(default=False, null=False, blank=True)
 
@@ -54,7 +54,8 @@ class UserCommunity(models.Model):
 
     #     super().save(*args, **kwargs)
     #############3# auto uprade is_mentor field#################3
-
+    def __str__(self):
+        return str(self.user_id) + ' - ' + str(self.community_id)
 
 
 class RequestMentor(models.Model):

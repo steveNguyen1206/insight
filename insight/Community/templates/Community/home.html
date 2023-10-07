@@ -14,8 +14,8 @@ Community
             {% for short in shorcuts %}
                 <div class="shorcut-wrapper">
                     <img src="{% static 'shiba-shorcut.jpg' %}" alt="{{short.name}}" class="shorcut-img">
-                    <h6>{{short.name}}</h6>
-                    <a href="{{short.path}}">
+                    <h6>{{short.community_id.name}}</h6>
+                    <a href="{% url 'Community:community-interface' short.community_id.pk %}">
                         <i class="fa-solid fa-paper-plane me-2"></i>
                     </a>    
                 </div>

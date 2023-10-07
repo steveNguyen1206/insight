@@ -8,6 +8,10 @@ urlpatterns = [
     path('community-interface/home/<int:pk>', community_interface, name='community-interface'),
     path('community-interface/mentor/<int:pk>', community_mentor, name='community-mentor'),
     path('community-interface/setting/<int:pk>', community_setting, name='community-setting'),
+    path('community-interface/docs/<int:pk>', get_community_docments, name='community-docs'),
     path('add-community', add_community, name='add-community'),
-    path('request-mentor', request_mentor, name='request_mentor')
+    path('request-mentor', request_mentor, name='ajax-request-mentor'),
+    path('join-community/<int:pk>', join_community, name='join-community'),
+    path('join-community/<int:pk>/<int:userId>', join_community, name='join-community-exam'),
+    path('verify-exam-score', verify_exam, name='verify-exam'),
 ]

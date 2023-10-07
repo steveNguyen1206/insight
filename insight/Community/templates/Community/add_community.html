@@ -41,13 +41,23 @@ Add community
         <div class="row mb-5">
             <h4 class="col-3">Score to be mentor</h4>
             <div class="col-6">
-                <input type="range" min="1" max="100" class="add-form-slider" value="50" name="mentor-threshold">
+                <input type="range" min="1" max="100" class="add-form-slider" id="threshold-slider" value="50" name="mentor-threshold">
             </div>
             <div class="col-3">
                 <span id="threshold-val">50</span>
             </div>
         </div>
+        <script>
+            const threshold_slider = document.querySelector('#threshold-slider')
+            
+            console.log(threshold_slider)
+            threshold_slider.addEventListener('change', ()=>{
+                console.log(event.target.value)
+            const text=document.querySelector('#threshold-val')
+            text.innerHTML=event.target.value
+            })
 
+        </script>
         <!-- <input id="mentor-threshold" name="mentor-threshold" class="form-control mb-3" type="number""> </textarea> -->
   
         <div class="row mb-5">
