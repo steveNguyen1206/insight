@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
         {% block title %}
-
+      
         {% endblock %}
     </title>
     {% load static %}
@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href='{% static "home.css" %}'>
     <link rel="stylesheet" href='{% static "community_home.css" %}'>
+    <link rel="stylesheet" href='{% static "user_view.css" %}'>
+    <link rel="stylesheet" href='{% static "base.css" %}'>
 
 
     {%block link%}
@@ -33,28 +35,23 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class='nav-link 
-                  {% if request.path == "/" or request.path == "/home" %}
-                    active
-                  {% endif %}
-                  community-titile
-                  ' 
+                <a class='nav-link header_c_titile'
                 aria-current="page" href="{% url 'Community:community-detail' community.pk %}">{{community.name}}</a>
               </li>
+              {% if this_c_user %}
               <li class="nav-item">
                 <a class='nav-link
-                  {% if request.path == "/add-community" %}
+                  {% if "/community-interface/home" in request.path %}
                     active
                   {% endif %}'
-                href="{% url 'Community:add-community' %}">Home</a>
+                href="{% url 'Community:community-interface' community.pk %}">Home</a>
               </li>
-
-              <li class="nav-item">
+             <li class="nav-item">
                 <a class='nav-link
-                  {% if request.path == "/add-community" %}
+                  {%  if "/community-interface/mentor" in request.path %}
                     active
                   {% endif %}'
-                href="{% url 'Community:add-community' %}">Mentor</a>
+                href="{% url 'Community:community-mentor' community.pk %}">Mentor</a>
               </li>
             
               <li class="nav-item">
@@ -64,7 +61,6 @@
                   {% endif %}'
                 href="{% url 'Community:add-community' %}">Document</a>
               </li>
-
               
               <li class="nav-item">
                 <a class='nav-link
@@ -74,7 +70,19 @@
                 href="{% url 'Community:add-community' %}">About</a>
               </li>
 
+              {% if is_former %}
+              <li class="nav-item">
+                <a class='nav-link
+                  {% if "/community-interface/setting" in request.path %}
+                    active
+                  {% endif %}'
+                href="{% url 'Community:community-setting' community.pk %}">Setting</a>
+              </li>
+              {% endif %}
+
+              {% endif %}
             </ul>
+
             {% if user.is_authenticated %}
               <div class="nav-item dropdown me-5">
                 <a class="nav-link dropdown-toggle " href="#" data-bs-toggle="dropdown" aria-expanded="false"> 
@@ -93,19 +101,25 @@
         </div>
       </nav>
 
-
+  {% if this_c_user %}
     <div id="left-size">
         <div class="sidebar">
             <div class="avatar"></div>
             <div class="username">{{user.username}}</div>
-            <div class="joindate">Joined:</div>
-        </div>
+            <div class="joindate">Joined: {{this_c_user.joined_date}}</div>
+            <div class="score">Score: {{this_c_user.score}}</div>
+            <div class="role">Role: {% if is_former %} Former {% elif this_c_user.is_mentor %} Mentor {% else %} Member {% endif %}</div>
+
+          </div>
     </div>
-<div class="community-container">
+  {% endif %}
+
+  <div class="{% if this_c_user %} community-container {% else %} community-detail-container {% endif %}">
     {% block content %}
 
     {% endblock %}
-</div>
+  </div>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>

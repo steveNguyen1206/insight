@@ -1,74 +1,40 @@
 {% extends 'Community/community_base.html' %}
 
-{% block title %}
-{{ community.name }}
-{% endblock %}
+{% block title %}{{ this_community.name }}{% endblock %}
+{% load static %}
 
-{% block content %}
-<div class="container" class="block">
+{% block content %} 
 
-    <div class="container_swap" class="block">
-        <style>
-            .container_swap{
-            width: 400px;
-            }
-            .div_left{
-            width: 1100px;
-            float: left;
-            text-align: center;
-            }    
-            .div_right{
-            width: 400px;
-            float: center;
-            text-align: center;
-            }       
-            </style>
-        <div class="div_left"><img src="https://img.myloview.com/stickers/default-avatar-profile-icon-vector-social-media-user-photo-700-205577532.jpg" class="rounded-3" style="width: 150px;"
-            alt="Avatar" />
-            <p class="text-muted"></p>
-        </div>
-   
-        <div class="div_left" >
-            <h5 class="mb-2" style="display: flexbox;"><strong>{{community.name}}</strong></h5>
-            <p class="text-muted">Number of members: </p>
-            <p class="text-muted">Created by {{community.created_user.username}} at {{community.created_date}}</p>
-            <p class="text-muted">{{community.description}}</p>
-        </div>  
-   </div>
-    <div class="block">
-        <h3>Formers:</h3>
+
+<div class="container">
+    <!-- <div class="block">
+        <h3>Documents:</h3>
         <table class="table table-sm table-bordered table-striped table-hover " style="text-align: center">
         <thead>
-            <!-- <colgroup>
-                <col width=auto span="1">
-                <col width=auto span="1">
-                <col width="150" span="1">
-                <col width="200" span="1">
-              </colgroup> -->
               
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Join date</th>
-            <th scope="col">Score</th>
+            <th scope="col">Creator</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
         </tr>
         </thead>
         <tbody>
-        {% for user_community in user_communities %}
+        {% for doc in community_doc %}
         <tr style="color:E7FBBE">
             <th scope="row">{{ forloop.counter }}</th>
-            <td>{{user_community.community_id.name}}</td>
-            <td>{{user_community.joined_date}}</td>
-            <td>{{user_community.score}}</td>
+            <td>{{doc.created_user_id.username}}</td>
+            <td>{{doc.title}}</td>
+            <td>{{doc.description}}</td>
         </tr>
         {% endfor %}
         </tbody>
         </table>
-        <a href="{% url 'Community:home' %}">Join</a>
+        <a href="{% url 'Community:home' %}">Configure this community</a>
     </div>
 
-    <!-- <div class="block">
-        <h3>Create list</h3>
+    <div class="block">
+        <h3>Score Rank:</h3>
         <table class="table table-sm table-bordered table-striped table-hover" style="text-align: center;border-collapse: collapse;" >
             <thead>
                 <colgroup>
@@ -94,11 +60,18 @@
             </tr>
             {% endfor %}
             </tbody>
-        </table></div>
-    </div> -->
+        </table></div> -->
+        {%for cuser in community_users%}
+            {% include 'Community/user_view.html' %}
+        {% endfor %}
+
+
+
+    </div>
 
 
 
 
-<a href="{% url 'Community:home' %}">Back</a>
+<!-- <a href="{% url 'Community:home' %}">Back</a> -->
 {% endblock %}
+```

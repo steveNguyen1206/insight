@@ -1,3 +1,12 @@
+.header_c_titile {
+    font-weight: bold;
+    color: black;
+    font-size: 18px;
+    margin: 0 18px;
+    padding-bottom: 0.3em;
+
+}
+
 .navbar {
     position: fixed;
     top: 0;
@@ -41,11 +50,31 @@
     text-align: center;
 }
 
-
 .community-container {
     margin-left: 250px;
     margin-top: 100px;
     scroll-behavior: smooth;
     min-height: 2000px;
 }
+
+ /* Style for buttons */
+ .border-btn {
+    text-decoration: none;
+    padding: 4px 16px;
+    background-color: #fff;
+    /* background-color: #007BFF; */
+    border: solid 2px var(--button-light);
+    color: var(--button-light);
+    border-radius: 18px;
+    margin: 0 8px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.border-btn:hover {
+    box-shadow:  0 .5rem 1rem rgba(black, .15);
+    color: var(--button-bold);
+    border:  solid 2px var(--button-bold);
+}
+
 

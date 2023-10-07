@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import *
 from django.views.generic import ListView, DetailView, CreateView
 from .forms import CommunityForm
+from Member.models import *
 
 # Create your views here.
 
@@ -74,16 +75,21 @@ def community_interface(request, pk):
     if not request.user.is_authenticated:
         return redirect('Member:signin')
     else:
-        # this_user = User.objects.get(id = pk)
+        this_user = User.objects.get(id = pk)
         # this_user2 = User.objects.get(id = pk)
         # print(this_user)
+        this_community_user = UserCommunity.objects.get(user_id = this_user.id)
         community=Community.objects.get(id= pk)
         community_doc= CommunityDoc.objects.filter(community_id = community)
+        community_users= UserCommunity.objects.filter(community_id = community).order_by('-score')
+        is_former = True
         print(community)
         context = {
+            'this_c_user': this_community_user,
             'community': community,
             'community_doc': community_doc,
-
+            'community_users': community_users,
+            'is_former': is_former
         }
         # community_size = creater_communities.count()
         # context['community_size'] = creater_communities.count()
@@ -95,10 +101,59 @@ def community_interface(request, pk):
 #3. truy vấn ra danh sách tất cả các mentor thuộc community 
 #4. render trang communitymentor
 
-#anh việt
-def community_mentor(request):
-    pass
+def community_mentor(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('Member:signin')
+    else:
+        this_user = User.objects.get(id = pk)
+        this_community_user = UserCommunity.objects.get(user_id = this_user.id)
+        community=Community.objects.get(id= pk)
+        threshold = community.mentor_threshold
+        mentor = UserCommunity.objects.filter(community_id = community, score__gt=threshold)
+        context = {
+            'this_c_user': this_community_user,
+            'community_mentors': mentor,
+            'community': community
+        }
+        return render(request, 'Community/community_mentor.html', context)
 
+
+def community_setting(request, pk):
+    if request.method == 'POST':
+        community_name = request.POST['community-name']
+        update_community = Community.objects.get(id = pk)
+        update_community.name = community_name
+    
+        community_description = request.POST['community-description']
+        update_community.description = community_description
+        
+        
+        community_threshold = request.POST['community-threshold']
+        update_community.mentor_threshold = community_threshold
+        
+        community_upload_permission = request.POST['community-upload-permission']
+        update_community.upload_permission = community_upload_permission
+
+        
+        update_community.save()
+        print(update_community)
+        print(update_community.mentor_threshold)
+
+        return JsonResponse(request.POST)
+    else:
+        community=Community.objects.get(id= pk)
+        this_user = User.objects.get(id = pk)
+        this_community_user = UserCommunity.objects.get(user_id = this_user.id)
+        print(this_user)
+        test = UserCommunity.objects.filter(community_id = community)
+        is_former = True
+        context = {
+            'this_c_user': this_community_user,
+            'is_former': is_former,
+            'community': community
+        }
+        print(community.upload_permission)
+        return render(request, 'Community/community_setting.html', context)
 
 # metadata: usercommunityID,  mentor_id
 #vd: request.POST.usercommunityID
@@ -145,7 +200,7 @@ def add_community(request):
         return redirect('Member:signin')
     else:
         user = request.user
-        if(request.method == 'POST'):
+        if request.method == 'POST':
             name = request.POST.get('community-name')
             description = request.POST.get('community-description')
             mentor_thres = request.POST.get('mentor-threshold')

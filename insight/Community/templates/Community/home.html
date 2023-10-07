@@ -22,13 +22,6 @@ Community
             {% endfor %}
         </div>
     </section>
-{% for community in communities %}
-    <h2>
-    <a href="{% url 'Community:community-detail' community.pk %}">{{community.name}}</a>
-    </h2>
-    <small>Created at {{community.created_date}} by <a href="{% url 'Member:profile' community.created_user.pk %}"> {{community.created_user.username}}</a> </small>
-    
-{% endfor %}
 
     <section id="community">
         <div class="community-container">
@@ -40,7 +33,7 @@ Community
                     <img src='{% static "dogs-shiba-inu.jpg" %}' class="card-img-top" alt="{{community.name}}-banner" style="height: 120px; object-fit:cover;">
                     <div class="card-body shadow-sm">
                         <h5 class="card-title">{{community.name}}</h5>
-                        <small>Created at {{community.created_date}} by <a href="#">{{community.created_user.username}}</a> </small>
+                        <small>Created at {{community.created_date}} by <a href="{% url 'Member:profile' community.created_user.id %}">{{community.created_user.username}}</a> </small>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                         <a href="{% url 'Community:community-detail' community.pk %}" class="btn btn-link">
                             <i class="fa-solid fa-paper-plane me-2"></i>View insight

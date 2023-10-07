@@ -2,7 +2,9 @@
     background-color: white;
     padding: 56px;
     margin-top: 48px;
+    margin-bottom: 64px;
     max-width: 950px;
+    border-radius: var(--container-border-radius);
 }
 
 .title-wrapper {

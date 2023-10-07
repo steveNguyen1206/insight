@@ -15,7 +15,9 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print(BASE_DIR)
+# print(BASE_DIR)
+           
+print(os.path.join(BASE_DIR, 'Commnunity', 'templates', 'Community'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -58,7 +60,8 @@ ROOT_URLCONF = 'insight.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

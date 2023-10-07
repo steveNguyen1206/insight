@@ -59,7 +59,7 @@ class UserCommunity(models.Model):
 
 class RequestMentor(models.Model):
     id = models.AutoField(primary_key=True)
-    UserCommunityId = models.ForeignKey(UserCommunity, on_delete=models.CASCADE)
-    mentorId =  models.ForeignKey(UserCommunity, on_delete=models.CASCADE)
+    UserCommunityId = models.ForeignKey(UserCommunity, on_delete=models.CASCADE, related_name='user_community')
+    mentorId =  models.ForeignKey(UserCommunity, on_delete=models.CASCADE, related_name='mentorid')
     upadate_date = models.DateField(auto_now_add=True)
     status = models.IntegerField(default= 0, blank=True, null=True) #1 == accepted, 2 == reject, 0 == waiting
