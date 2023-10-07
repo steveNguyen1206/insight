@@ -74,6 +74,7 @@ def community_detail(request, pk):
         community=Community.objects.get(id= pk)
         community_doc= CommunityDoc.objects.filter(community_id = community)
         user_community = UserCommunity.objects.filter(community_id = community)
+        user_community = user_community.order_by('-score')
         context = {
             'community': community,
             'community_doc': community_doc,
@@ -165,8 +166,9 @@ def add_community(request):
 def join_community(request,pk):
     community = Community.objects.get(id = pk)
     user = request.user
-    if commmunity.entrance_test_enable:
-        pass
+    # nếu có bật chức năng test thì chuyển qua trang test của nhóm khác
+    if community.entrance_test_enable:
+        return redirect('Community:home')
     else:
         if request.user.is_authenticated:
             community.Member.add(user)
